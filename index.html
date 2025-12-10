@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eROSA 26 - Portal Penganjur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF7F50', // Coral Orange
+                        primaryHover: '#E06538',
+                        primaryLight: '#FFF5F0', // Sidebar Tint
+                        dark: '#343a40',
+                        light: '#f8f9fa',
+                        background: '#F0F2F5',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F0F2F5; color: #212529; }
+        
+        /* SIDEBAR (Light Orange Tint, No Border) */
+        .abp-sidebar { background-color: #FFF5F0; color: #495057; border-right: none; }
+        .abp-sidebar .nav-item { color: #594a42; border-radius: 0.5rem; margin: 0.25rem 0.75rem; font-weight: 500; transition: all 0.2s; }
+        .abp-sidebar .nav-item:hover { background-color: #FF7F50; color: #fff; }
+        .abp-sidebar .nav-item.active { background-color: #ffffff; color: #FF7F50; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        
+        .abp-header { background-color: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.03); border-bottom: 1px solid #e5e7eb; }
+        .abp-card { background-color: #fff; border: 1px solid #e5e7eb; border-radius: 0.75rem; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        
+        .form-control { width: 100%; padding: 0.6rem; border: 1px solid #ced4da; border-radius: 0.5rem; background-color: #fff; transition: border-color 0.15s; }
+        .form-control:focus { border-color: #FF7F50; outline: none; box-shadow: 0 0 0 0.2rem rgba(255, 127, 80, 0.25); }
+        
+        .step-indicator { border-bottom: 3px solid #e5e7eb; color: #adb5bd; transition: all 0.3s; }
+        .step-indicator.active { border-bottom: 3px solid #FF7F50; color: #FF7F50; font-weight: bold; }
+
+        /* Mobile Sidebar Transition */
+        .sidebar-overlay { background-color: rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <div id="mobile-overlay" onclick="toggleSidebar()" class="fixed inset-0 z-20 sidebar-overlay hidden md:hidden"></div>
+
+    <aside id="sidebar" class="abp-sidebar w-64 flex-shrink-0 flex flex-col fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 z-30 transition-transform duration-300 shadow-xl md:shadow-none">
+        <div class="h-16 flex items-center justify-center font-bold text-xl text-primary tracking-wider border-b border-orange-200/50">
+            <i class="fas fa-running mr-2"></i> eROSA 26
+        </div>
+        
+        <nav class="flex-1 overflow-y-auto py-4 space-y-1">
+            <div class="px-6 py-2 text-xs uppercase font-bold text-orange-400 tracking-wider mb-1">Menu Penganjur</div>
+            <a href="#" class="nav-item flex items-center px-4 py-3"><i class="fas fa-home w-5 mr-3 text-center"></i> Papan Pemuka</a>
+            <a href="#" class="nav-item flex items-center px-4 py-3"><i class="fas fa-building w-5 mr-3 text-center"></i> Organisasi Saya</a>
+            <a href="#" class="nav-item active flex items-center px-4 py-3"><i class="fas fa-plus-circle w-5 mr-3 text-center"></i> Pendaftaran Baru</a>
+            
+            <div class="mt-8 px-6 py-2 text-xs uppercase font-bold text-orange-400 tracking-wider mb-1">Tukar Demo</div>
+            <a href="admin.html" class="nav-item flex items-center px-4 py-3 transition"><i class="fas fa-external-link-alt w-5 mr-3 text-center"></i> Lihat Portal Admin</a>
+        </nav>
+
+        <div class="p-6 mt-auto border-t border-orange-200/50 flex flex-col items-center justify-center text-center bg-orange-50/50">
+            <img src="kbs.png" alt="Logo KBS" class="w-16 h-auto mb-3 opacity-90">
+            <div class="text-[9px] text-orange-400 font-bold uppercase tracking-wide leading-tight">Kementerian Belia & Sukan</div>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col w-full relative">
+        <header class="abp-header h-16 flex items-center justify-between px-6 z-10">
+            <button onclick="toggleSidebar()" class="text-gray-400 hover:text-primary md:hidden"><i class="fas fa-bars text-xl"></i></button>
+            <div class="flex items-center gap-3 ml-auto">
+                <div class="text-right hidden sm:block">
+                    <div class="text-sm font-bold text-gray-700">Ali Bin Abu</div>
+                    <div class="text-xs text-gray-500">Setiausaha Penaja</div>
+                </div>
+                <div class="h-9 w-9 bg-primary text-white rounded-full flex items-center justify-center font-bold shadow-sm">A</div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+            
+            <div class="flex flex-col md:flex-row justify-between items-end mb-6 gap-2">
+                <div class="w-full">
+                    <h1 class="text-2xl font-light text-gray-800">Daftar Badan Sukan Baru</h1>
+                    <p class="text-sm text-gray-500 mt-1">Hantar permohonan anda kepada Pesuruhjaya Sukan (PJS).</p>
+                </div>
+                <nav class="text-sm text-gray-500 hidden md:block whitespace-nowrap">Utama / Pendaftaran / <span class="text-primary font-semibold">Baru</span></nav>
+            </div>
+
+            <div class="abp-card shadow-sm">
+                <div class="flex border-b border-gray-100 overflow-x-auto">
+                    <div id="tab-1" class="step-indicator active flex-1 min-w-[100px] py-4 text-center cursor-pointer text-sm uppercase tracking-wide whitespace-nowrap hover:bg-gray-50">1. Info Asas</div>
+                    <div id="tab-2" class="step-indicator flex-1 min-w-[120px] py-4 text-center cursor-pointer text-sm uppercase tracking-wide whitespace-nowrap hover:bg-gray-50">2. Jawatankuasa</div>
+                    <div id="tab-3" class="step-indicator flex-1 min-w-[130px] py-4 text-center cursor-pointer text-sm uppercase tracking-wide whitespace-nowrap hover:bg-gray-50">3. Perlembagaan</div>
+                    <div id="tab-4" class="step-indicator flex-1 min-w-[100px] py-4 text-center cursor-pointer text-sm uppercase tracking-wide whitespace-nowrap hover:bg-gray-50">4. Hantar</div>
+                </div>
+
+                <div id="step-1-content" class="p-6 md:p-8">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Maklumat Organisasi</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Kategori</label>
+                            <select class="form-control">
+                                <option>Kelab Sukan (Tunggal)</option>
+                                <option>Kelab Rekreasi Am</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-600 mb-1">Jenis Sukan</label>
+                            <select class="form-control">
+                                <option>Bola Sepak</option>
+                                <option>Badminton</option>
+                                <option>E-Sukan</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-primaryLight p-6 rounded-xl border border-orange-100">
+                        <label class="block text-sm font-bold text-orange-900 mb-2">Cadangan Nama</label>
+                        <div class="relative">
+                            <input type="text" id="org-name" class="form-control pr-36 border-orange-200 focus:border-primary" placeholder="Cth: Kelab Bola Sepak Bangsar">
+                            <button onclick="checkName()" class="absolute right-1 top-1 bottom-1 bg-primary hover:bg-primaryHover text-white px-4 rounded-lg text-sm font-bold transition shadow-sm">Semak Nama</button>
+                        </div>
+                        <div id="name-feedback" class="mt-3 text-sm hidden font-medium"></div>
+                    </div>
+
+                    <div class="flex justify-end mt-8">
+                        <button onclick="nextStep(2)" id="btn-next-1" class="bg-gray-200 text-gray-400 px-8 py-2.5 rounded-lg font-bold cursor-not-allowed transition" disabled>Seterusnya</button>
+                    </div>
+                </div>
+
+                <div id="step-2-content" class="p-6 md:p-8 hidden">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Jawatankuasa Penaja</h3>
+                    
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r-lg">
+                        <div class="flex">
+                            <div class="flex-shrink-0"><i class="fas fa-info-circle text-blue-500"></i></div>
+                            <div class="ml-3">
+                                <p class="text-sm text-blue-700">
+                                    <strong>Integrasi Pintar:</strong> Nama dan No. KP disemak secara automatik dengan pangkalan data <strong>Jabatan Pendaftaran Negara (JPN)</strong>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-end bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <div class="md:col-span-3">
+                            <label class="text-xs text-gray-500 uppercase font-bold mb-1 block">No. KP</label>
+                            <input type="text" id="new-member-ic" class="form-control" placeholder="901010-14-XXXX">
+                        </div>
+                        <div class="md:col-span-5">
+                            <label class="text-xs text-gray-500 uppercase font-bold mb-1 block">Nama Penuh</label>
+                            <input type="text" id="new-member-name" class="form-control" placeholder="Nama seperti dalam MyKad">
+                        </div>
+                        <div class="md:col-span-3">
+                            <label class="text-xs text-gray-500 uppercase font-bold mb-1 block">Jawatan</label>
+                            <select id="new-member-role" class="form-control">
+                                <option>Pengerusi</option>
+                                <option>Naib Pengerusi</option>
+                                <option>Setiausaha</option>
+                                <option>Bendahari</option>
+                                <option>AJK Biasa</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-1">
+                            <button onclick="addMember()" class="bg-gray-800 text-white w-full py-2.5 rounded-lg h-11 hover:bg-gray-700 shadow-md flex items-center justify-center transition">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="border border-gray-200 rounded-xl overflow-x-auto">
+                        <table class="w-full text-left min-w-[600px]">
+                            <thead class="bg-gray-50 text-gray-500 border-b border-gray-200">
+                                <tr>
+                                    <th class="py-3 px-4 text-xs uppercase font-bold">Nama / No. KP</th>
+                                    <th class="py-3 px-4 text-xs uppercase font-bold">Jawatan</th>
+                                    <th class="py-3 px-4 text-xs uppercase font-bold text-right">Status JPN</th>
+                                </tr>
+                            </thead>
+                            <tbody id="committee-list-body" class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="py-3 px-4">
+                                        <div class="font-bold text-gray-700">Ali Bin Abu</div>
+                                        <div class="text-xs text-gray-400 font-mono">850202-14-5566</div>
+                                    </td>
+                                    <td class="py-3 px-4 text-sm text-gray-600">Setiausaha</td>
+                                    <td class="py-3 px-4 text-right">
+                                        <span class="inline-flex items-center gap-1 bg-green-100 text-green-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-green-200">
+                                            <i class="fas fa-check-circle"></i> Sah
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="flex justify-between mt-8">
+                        <button onclick="nextStep(1)" class="text-gray-500 hover:text-gray-800 font-bold px-6">Kembali</button>
+                        <button onclick="nextStep(3)" class="bg-primary hover:bg-primaryHover text-white px-8 py-2.5 rounded-lg shadow-md font-bold transition transform hover:-translate-y-0.5">Seterusnya</button>
+                    </div>
+                </div>
+
+                <div id="step-3-content" class="p-6 md:p-8 hidden">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">Penjana e-Perlembagaan</h3>
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <div class="w-full md:w-1/3 space-y-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-600 mb-1">Alamat Berdaftar</label>
+                                <textarea class="form-control text-sm" rows="3" oninput="updatePreview()">No 15, Jalan Telawi, Bangsar, 59100 KL</textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-600 mb-1">Yuran Keahlian (Tahunan)</label>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-100 border border-r-0 border-gray-300 p-2.5 rounded-l-lg text-gray-500 text-sm font-bold">RM</span>
+                                    <input type="number" id="fee-input" class="form-control rounded-l-none" value="50" oninput="updatePreview()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full md:w-2/3 bg-gray-50 border border-gray-200 p-8 rounded-xl shadow-inner h-96 overflow-y-auto font-serif text-gray-800 relative leading-relaxed">
+                            <div class="absolute top-0 right-0 bg-gray-200 text-xs px-3 py-1 rounded-bl-xl text-gray-500 font-bold">Mod Pratonton</div>
+                            <h4 class="font-bold text-center underline mb-6 uppercase text-lg tracking-wide" id="preview-title">PERLEMBAGAAN KELAB BOLA SEPAK BANGSAR</h4>
+                            
+                            <p class="text-sm text-justify mb-4"><strong>FASAL 1: NAMA</strong><br>Pertubuhan ini dikenali dengan nama <span class="bg-yellow-100 px-1 font-bold">Kelab Bola Sepak Bangsar</span>.</p>
+                            
+                            <p class="text-sm text-justify mb-4"><strong>FASAL 2: ALAMAT</strong><br>Alamat berdaftar ialah <span class="bg-yellow-100 px-1 font-bold">No 15, Jalan Telawi, Bangsar, 59100 KL</span>.</p>
+                            
+                            <p class="text-sm text-justify mb-4"><strong>FASAL 3: YURAN</strong><br>Yuran tahunan ahli adalah sebanyak <span class="bg-yellow-100 px-1 font-bold" id="fee-display">RM 50.00</span>. Yuran ini perlu dijelaskan sebelum 31 Januari setiap tahun.</p>
+                            
+                            <p class="text-sm text-justify mb-4"><strong>FASAL 4: OBJEKTIF</strong><br>Untuk mempromosi, menggalakkan dan membangunkan sukan bola sepak dalam komuniti.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-8">
+                        <button onclick="nextStep(2)" class="text-gray-500 hover:text-gray-800 font-bold px-6">Kembali</button>
+                        <button onclick="nextStep(4)" class="bg-primary hover:bg-primaryHover text-white px-8 py-2.5 rounded-lg shadow-md font-bold transition transform hover:-translate-y-0.5">Seterusnya</button>
+                    </div>
+                </div>
+
+                <div id="step-4-content" class="p-12 hidden text-center">
+                    <div class="h-24 w-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl shadow-sm">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2 class="text-3xl font-light text-gray-800 mb-2">Sedia Untuk Dihantar</h2>
+                    <p class="text-gray-500 mb-8">Sila sahkan semua butiran. Fi Permohonan: <strong class="text-gray-800">RM 50.00</strong></p>
+                    
+                    <button onclick="alert('Permohonan Berjaya Dihantar!'); window.location.reload();" class="bg-primary hover:bg-primaryHover text-white px-12 py-3.5 rounded-xl shadow-lg font-bold text-lg transition transform hover:scale-105 active:scale-95">
+                        Hantar & Bayar Sekarang
+                    </button>
+                    
+                    <div class="mt-8">
+                        <button onclick="nextStep(3)" class="text-sm text-gray-400 hover:text-gray-700 underline font-medium">Semak Semula</button>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        // --- NAME CHECKER ---
+        function checkName() {
+            const name = document.getElementById('org-name').value;
+            const fb = document.getElementById('name-feedback');
+            const btn = document.getElementById('btn-next-1');
+            
+            fb.classList.remove('hidden');
+            fb.innerHTML = '<i class="fas fa-spinner fa-spin text-primary"></i> Menyemak pangkalan data...';
+            
+            setTimeout(() => {
+                if(name.length > 5) {
+                    fb.innerHTML = `<span class="text-green-600 flex items-center gap-1"><i class="fas fa-check-circle"></i> Nama Sah Digunakan</span>`;
+                    btn.disabled = false;
+                    btn.className = "bg-primary hover:bg-primaryHover text-white px-8 py-2.5 rounded-lg font-bold shadow-md transition transform hover:-translate-y-0.5";
+                    document.getElementById('preview-title').innerText = "PERLEMBAGAAN " + name.toUpperCase();
+                } else {
+                    fb.innerHTML = `<span class="text-red-500 font-bold">Nama terlalu pendek atau tidak sah.</span>`;
+                    btn.disabled = true;
+                    btn.className = "bg-gray-200 text-gray-400 px-8 py-2.5 rounded-lg font-bold cursor-not-allowed";
+                }
+            }, 800);
+        }
+
+        // --- VERIFICATION LOGIC ---
+        function addMember() {
+            const nameInput = document.getElementById('new-member-name');
+            const icInput = document.getElementById('new-member-ic');
+            const roleInput = document.getElementById('new-member-role');
+            
+            if(!nameInput.value || !icInput.value) { alert("Sila isi Nama dan No. KP."); return; }
+
+            const tbody = document.getElementById('committee-list-body');
+            const rowId = 'row-' + Date.now();
+            
+            const newRow = `
+                <tr class="border-b border-gray-100" id="${rowId}">
+                    <td class="py-3 px-4">
+                        <div class="font-bold text-gray-700">${nameInput.value}</div>
+                        <div class="text-xs text-gray-400 font-mono">${icInput.value}</div>
+                    </td>
+                    <td class="py-3 px-4 text-sm text-gray-600">${roleInput.value}</td>
+                    <td class="py-3 px-4 text-right">
+                        <span id="badge-${rowId}" class="inline-flex items-center gap-1 bg-gray-100 text-gray-500 px-2.5 py-1 rounded-lg text-xs font-bold border border-gray-200">
+                            <i class="fas fa-circle-notch fa-spin"></i> Semakan JPN...
+                        </span>
+                    </td>
+                </tr>
+            `;
+            
+            tbody.insertAdjacentHTML('beforeend', newRow);
+
+            setTimeout(() => {
+                const badge = document.getElementById(`badge-${rowId}`);
+                if(badge) {
+                    badge.className = "inline-flex items-center gap-1 bg-green-100 text-green-700 px-2.5 py-1 rounded-lg text-xs font-bold border border-green-200 fade-in";
+                    badge.innerHTML = '<i class="fas fa-check-circle"></i> Sah';
+                }
+            }, 1500);
+
+            nameInput.value = "";
+            icInput.value = "";
+        }
+
+        // --- PREVIEW UPDATE ---
+        function updatePreview() {
+            document.getElementById('fee-display').innerText = "RM " + document.getElementById('fee-input').value + ".00";
+        }
+
+        // --- WIZARD NAVIGATION ---
+        function nextStep(step) {
+            for(let i=1; i<=4; i++) {
+                document.getElementById(`step-${i}-content`).classList.add('hidden');
+                document.getElementById(`tab-${i}`).classList.remove('active');
+                if(i < step) {
+                    document.getElementById(`tab-${i}`).classList.add('text-primary');
+                    // Mobile fix: ensure text stays visible/formatted
+                }
+            }
+            document.getElementById(`step-${step}-content`).classList.remove('hidden');
+            document.getElementById(`tab-${step}`).classList.add('active');
+        }
+    </script>
+</body>
+</html>
